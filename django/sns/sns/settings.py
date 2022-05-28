@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
-    'tweet',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +52,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sns.urls'
 TEMPLATE_DIR = Path.joinpath(BASE_DIR, 'templates')
-
+# VSC 사용시 templates 경로 설정 필수!<55번과, 60번 코드>
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

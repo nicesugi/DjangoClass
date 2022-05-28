@@ -1,5 +1,5 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse # HttpResponse 는 클래스. 
+from django.shortcuts import render # render 는 html을 보여주는 역할
 
 
 def base_response(request):
@@ -7,3 +7,5 @@ def base_response(request):
 
 def first_view(request):
     return render(request, 'my_test.html')
+
+# first_view는 my_test.html을 보여주는 함수로, 함수를 만든 후에는 url 연동 필수 ! 같은 위치의 폴더에서 urls.py에서 진행합니다.

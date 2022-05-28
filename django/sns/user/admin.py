@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserModel
+from .models import UserModel # 현재위치와 동일하게 있는 models.py 에서 UserModel(클래스)을 불러옴
 
 # Register your models here.
-admin.site.register(UserModel) # 이 코드가 나의 UserModel을 Admin에 추가 해 줍니다
+admin.site.register(UserModel) # 불 러 온 UserModel(클래스)를 관리자 계정에 넣음
