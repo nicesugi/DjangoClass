@@ -3,7 +3,7 @@ from django.db import models
 
 
 # Create your models here.
-class UserModel(models.Model): # admin에서 클래스가 호출 당한 뒤, admin에 넣어짐 > admin에 넣을 클래스 = 데이터베이스에 넣을 클래스
+class UserModel(models.Model): # admin에서 클래스가 호출 당한 뒤, admin에 넣어짐 > admin에 넣을 클래스
     class Meta:
         db_table = "my_user" # 테이블 이름은 my_user로, 데이터베이스 정보는 클래스 Meta 에 적어줌.
 
