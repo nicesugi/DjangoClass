@@ -1,3 +1,4 @@
+from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -17,3 +18,10 @@ def tweet(request):
         else:
             print('로그인이 안된 상태')
             return redirect('/sign-in')
+    elif request.method == 'POST':  
+        user = request.user  # 현재 로그인 한 사용자를 불러오기
+        my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
+        my_tweet.author = user  # 모델에 사용자 저장
+        my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
+        my_tweet.save() 
+        return redirect('/tweet')
