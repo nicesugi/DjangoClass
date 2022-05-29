@@ -42,28 +42,29 @@
                 <hr>
                 <!-- 작성 된 글이 나오는 곳 -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="media">
-                                    <div class="media-body">
-                                        <h5 class="mt-0">Media heading</h5>
-                                        <p>Will you do the same for me? It's time to face the music I'm no longer your
-                                            muse.
-                                            Heard it's
-                                            beautiful, be the judge and my girls gonna take a vote. I can feel a phoenix
-                                            inside
-                                            of me.
-                                            Heaven is
-                                            jealous of our love, angels are crying from up above. Yeah, you take me to
-                                            utopia.</p>
+                    {% for tw in tweet %}
+                    {% comment %} {'tweet':all_tweet}의 tweet! tw는 tweet 리스트 중에 하나라는 뜻 {% endcomment %}
+                        <div class="col-md-12 mb-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ tw.content }}</h5>
+                                            {% comment %} 해당하는 tweet에 우리가 작성했던 글 정보들을 불러옴 / content 작성하는 공간 name{% endcomment %}
+                                        </div>
+                                        <div style="text-align: right">
+                                            <span style="font-size: small">{{ tw.author.username }}-{{ tw.created_at|timesince }} 전</span>
+                                            {% comment %} tw.author의 해당하는 전체 정보에서 유저네임'만' 가져옴 {% endcomment %}
+                                            {% comment %} tw.created_at 몇월몇일몇시몇분이 나옴 
+                                            | : end문이 끝날때까지 같은방법을 계속 반복해서 출력함
+                                            장고에서 제공하는 timesince 사용하여 몇시간 전 몇분 전 이라고 표시함 {% endcomment %}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-
             </div>
             <div class="col-md-2"></div>
         </div>

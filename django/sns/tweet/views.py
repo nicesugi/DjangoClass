@@ -12,10 +12,11 @@ def home(request):
 def tweet(request):
     if request.method =='GET':
         user = request.user.is_authenticated 
-        # 사용자의 로그인(인증)상태를 user라고 하고, 참이면 트윗 브라우저를 띄워주고 거짓이면 로그인페이지로 이동
-        if user:
-           return render(request, 'tweet/home.html')
-        else:
+        # 사용자의 로그인(인증)상태를 user라고 함
+        if user: # 사용자가 로그인(인증)상태라면
+            all_tweet = TweetModel.objects.all().order_by('-created_at')  # TweetModel에 저장한 모든 모델을 저장함 (생성된 시간을 '-'을 붙여 최신순,역순으로 정렬)
+            return render(request, 'tweet/home.html',{'tweet':all_tweet}) # 최신순 정렬인 all_tweet을 tweet/home.html 넘겨준다 > 딕셔너리 형태로 ! 키값은 트윗
+        else: # 사용자가 로그인(인증)상태가 아니라면
             print('로그인이 안된 상태')
             return redirect('/sign-in')
     elif request.method == 'POST':  
@@ -25,3 +26,6 @@ def tweet(request):
         my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
         my_tweet.save() 
         return redirect('/tweet')
+    
+    
+   
