@@ -7,7 +7,14 @@ from django.contrib import auth # 사용자 auth 기능
 
 def sign_up_view(request):
     if request.method == 'GET':
-        return render(request, 'user/signup.html')
+        user = request.user.is_authenticated
+        # 사용자가 로그인(인증)상태로 sign-up페이지에 접속한다면 트윗페이지로 돌려주고, 인증상태가 아니라면 sign-up페이지 이동
+        if user:
+            print('로그인상태입니다.로그아웃해주세요.')
+            return redirect('/') # tweet.views에 home 함수 기능 때문에 이곳에서는 '/'로 redirect시켜줌
+        else:
+            return render(request, 'user/signup.html')
+
     elif request.method == 'POST':
         username = request.POST.get('username', None) # 입력되는 'username'의 정보는 username의 변수로 저장 (없다면 none 처리)
         password = request.POST.get('password', None)
@@ -59,4 +66,10 @@ def sign_in_view(request):
             print('로그인 실패')
             return redirect('/sign-in')
     elif request.method == 'GET':
-        return render(request, 'user/signin.html')
+        user = request.user.is_authenticated
+        # 사용자가 로그인(인증)상태로 sign-up페이지에 접속한다면 트윗페이지로 돌려주고, 인증상태가 아니라면 sign-up페이지 이동
+        if user:
+            print('로그인상태입니다.로그아웃해주세요.')
+            return redirect('/') # tweet.views에 home 함수 기능 때문에 이곳에서는 '/'로 redirect시켜줌
+        else:
+            return render(request, 'user/signin.html')

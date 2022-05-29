@@ -10,4 +10,10 @@ def home(request):
 
 def tweet(request):
     if request.method =='GET':
-        return render(request, 'tweet/home.html')
+        user = request.user.is_authenticated 
+        # 사용자의 로그인(인증)상태를 user라고 하고, 참이면 트윗 브라우저를 띄워주고 거짓이면 로그인페이지로 이동
+        if user:
+           return render(request, 'tweet/home.html')
+        else:
+            print('로그인이 안된 상태')
+            return redirect('/sign-in')
