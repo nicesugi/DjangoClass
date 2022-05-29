@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from .models import UserModel
 from django.contrib.auth import get_user_model #사용자가 있는지 검사하는 함수
-
+from django.contrib import auth # 사용자 auth 기능
 
 
 def sign_up_view(request):
@@ -34,11 +34,13 @@ def sign_in_view(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
 
-        me = UserModel.objects.get(username=username)  # 사용자 불러오기
-        if me.password == password:  # 저장된 사용자의 패스워드와 입력받은 패스워드 비교
-            request.session['user'] = me.username  # 세션에 사용자 이름 저장
+        me = auth.authenticate(request, username=username, password=password)  # authenticate 함수 이용하여 암호화된 비밀번호와 입력한 비밀번호가 일치하고 유저네임도 맞는지 확인가능
+        if me is not None:  # 사용자가 있는지 구분만 함 / 왜? 위에서 이미 사용자 정보를 체크해주고 로그인 정보를 들고오기 때문
+            auth.login(request, me) # auth.login : 장고 제공되는 로그인 함수 / 로그인 함수에 사용자(me) 정보를 넣어줌
+            print('로그인 성공')
             return HttpResponse(me.username) # 로그인 하는 username 브라우저에 표시함
         else: 
+            print('로그인 실패')
             return redirect('/sign-in')
     elif request.method == 'GET':
         return render(request, 'user/signin.html')
