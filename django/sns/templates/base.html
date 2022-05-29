@@ -42,6 +42,8 @@
             </ul>
         </div>
         <form class="form-inline my-2 my-lg-0">
+            {% comment %} tweet.views. home 함수에서도 사용됨 / if문이 활용되면, 유저가 로그인(인증)이 되지않았으면 아래를 보여주고 else라면 반갑습니다를 보여줌{% endcomment %}
+            {% if not user.is_authenticated %}
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
                     <a class="nav-link" href="/sign-in"> Sign In <span class="sr-only"></span></a>
@@ -50,6 +52,9 @@
                     <a class="nav-link" href="/sign-up"> Sign Up <span class="sr-only"></span></a>
                 </li>
             </ul>
+            {% else %}
+                {{ user.username }} 님 반갑습니다!
+            {% endif %}
         </form>
     </div>
 </nav>

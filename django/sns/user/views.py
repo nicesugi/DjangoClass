@@ -5,7 +5,6 @@ from .models import UserModel
 from django.contrib.auth import get_user_model #사용자가 있는지 검사하는 함수
 from django.contrib import auth # 사용자 auth 기능
 
-
 def sign_up_view(request):
     if request.method == 'GET':
         return render(request, 'user/signup.html')
@@ -38,10 +37,26 @@ def sign_in_view(request):
         if me is not None:  # 사용자가 있는지 구분만 함 / 왜? 위에서 이미 사용자 정보를 체크해주고 로그인 정보를 들고오기 때문
             auth.login(request, me) # auth.login : 장고 제공되는 로그인 함수 / 로그인 함수에 사용자(me) 정보를 넣어줌
             print('로그인 성공')
-            return HttpResponse(me.username) # 로그인 하는 username 브라우저에 표시함
+            return redirect('/') # '/' : tweet.urls > views.home > home 함수 > 성공시 트윗페이지
         else: 
             print('로그인 실패')
             return redirect('/sign-in')
     elif request.method == 'GET':
         return render(request, 'user/signin.html')
 
+
+def sign_in_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', None)
+        password = request.POST.get('password', None)
+
+        me = auth.authenticate(request, username=username, password=password)  
+        if me is not None:  
+            auth.login(request, me)
+            print('로그인 성공')
+            return redirect('/') 
+        else: 
+            print('로그인 실패')
+            return redirect('/sign-in')
+    elif request.method == 'GET':
+        return render(request, 'user/signin.html')
