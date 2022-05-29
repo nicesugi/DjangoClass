@@ -40,7 +40,7 @@ def sign_in_view(request):
         me = UserModel.objects.get(username=username)  # 사용자 불러오기
         if me.password == password:  # 저장된 사용자의 패스워드와 입력받은 패스워드 비교
             request.session['user'] = me.username  # 세션에 사용자 이름 저장
-            return HttpResponse("로그인 성공!")
+            return HttpResponse(username) # 로그인 하는 username 브라우저에 표시함
         else: 
             return redirect('/sign-in')
     elif request.method == 'GET':
