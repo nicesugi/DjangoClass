@@ -1,5 +1,7 @@
 # user의 urls.py에 연결 할 tweet앱의 views.py 작성하기
+from xml.etree.ElementTree import Comment
 from django.contrib.auth.decorators import login_required
+from .models import TweetComment 
 from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
 
@@ -41,3 +43,9 @@ def delete_tweet(request, id):
     return redirect('/tweet')   
 # 장고 delete_tweet 함수를 이용하여 '/tweet'로 이동시켜줌 
 # 삭제는 로그인만 되어있는 상태에서 가능 > login_required 임포트해주고 함수에 @ 작성해 적용시켜준다
+
+
+
+def detail_tweet(request, id):
+    my_tweet = TweetModel.objects.get(id=id)
+    return render(request, 'tweet/tweet_detail.html', {'tweet':my_tweet})
