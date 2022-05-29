@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from .models import UserModel
 from django.contrib.auth import get_user_model #사용자가 있는지 검사하는 함수
 from django.contrib import auth # 사용자 auth 기능
+from django.contrib.auth.decorators import login_required
 
 def sign_up_view(request):
     if request.method == 'GET':
@@ -52,6 +53,7 @@ def sign_in_view(request):
         return render(request, 'user/signin.html')
 
 
+
 def sign_in_view(request):
     if request.method == 'POST':
         username = request.POST.get('username', None)
@@ -73,3 +75,14 @@ def sign_in_view(request):
             return redirect('/') # tweet.views에 home 함수 기능 때문에 이곳에서는 '/'로 redirect시켜줌
         else:
             return render(request, 'user/signin.html')
+
+
+@login_required
+def logout(request):
+    auth.logout(request)
+    return redirect('/')
+
+# 장고 logout함수를 이용하여 '/'로 이동시켜줌 
+# '/'로 이동하는 이유는 tweet.views에 home 함수에서 자동으로 조건에 맞는 페이지로 이동하기 때문
+# home 함수는 tweet or sign-in 로 redirect해줌
+# 로그아웃은 로그인만 되어있는 상태에서 가능하기 때문에 임포트해주고 함수에 @ 작성해 적용시켜준다
