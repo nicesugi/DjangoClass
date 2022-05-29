@@ -1,5 +1,8 @@
+# user의 urls.py에 연결 할 tweet앱의 views.py 작성하기
+from django.contrib.auth.decorators import login_required
 from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
+
 
 # Create your views here.
 def home(request):
@@ -8,6 +11,8 @@ def home(request):
         return redirect('/tweet') # user.views.sign_in_view 함수 성공 > tweet.urls.name=home > tweet.views 지금 이 코드와 최종적 연결됨
     else:
         return redirect('sign-in')
+
+
 
 def tweet(request):
     if request.method =='GET':
@@ -27,5 +32,12 @@ def tweet(request):
         my_tweet.save() 
         return redirect('/tweet')
     
-    
-   
+
+
+@login_required
+def delete_tweet(request, id):
+    my_tweet = TweetModel.objects.get(id=id)
+    my_tweet.delete()
+    return redirect('/tweet')   
+# 장고 delete_tweet 함수를 이용하여 '/tweet'로 이동시켜줌 
+# 삭제는 로그인만 되어있는 상태에서 가능 > login_required 임포트해주고 함수에 @ 작성해 적용시켜준다

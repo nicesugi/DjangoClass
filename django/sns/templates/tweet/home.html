@@ -47,6 +47,21 @@
                         <div class="col-md-12 mb-2">
                             <div class="card">
                                 <div class="card-body">
+                                    {% if tw.author == user %}
+                                    {% comment %} tweet의 author 전체 정보에서 user(지금 로그인 되어있는 사용자)라면? 삭제버튼 보여줌 {% endcomment %}
+                                    <div style="text-align: right">
+                                        <a href="/tweet/delete/{{ tw.id }}">
+                                            {% comment %} {{ tw.id }} 해당하는 tweet의 id 나옴 {% endcomment %}
+                                            <span class="badge rounded-pill bg-danger">삭제</span>
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                    {% comment %} 로그인한 사용자가 아니라면 보기버튼'만' 보여줌 {% endcomment %}
+                                    <div style="text-align: right">
+                                        <a href="#">
+                                            <span class="badge rounded-pill bg-success">보기</span>
+                                        </a>
+                                    </div>
                                     <div class="media">
                                         <div class="media-body">
                                             <h5 class="mt-0">{{ tw.content }}</h5>
