@@ -1,7 +1,6 @@
 # user의 urls.py에 연결 할 tweet앱의 views.py 작성하기
 from xml.etree.ElementTree import Comment
 from django.contrib.auth.decorators import login_required
-from .models import TweetComment 
 from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
 
