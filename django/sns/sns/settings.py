@@ -124,3 +124,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# mySpartaSns/settings.py
+# 기본 인증과정 (AUTH_USER_MODEL)을 user앱에 작성한 UserModel로 사용한다는 뜻
+AUTH_USER_MODEL = 'user.UserModel'
