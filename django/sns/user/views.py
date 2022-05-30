@@ -17,21 +17,21 @@ def sign_up_view(request):
             return render(request, 'user/signup.html')
 
     elif request.method == 'POST':
-        username = request.POST.get('username', None) # 입력되는 'username'의 정보는 username의 변수로 저장 (없다면 none 처리)
-        password = request.POST.get('password', None)
-        password2 = request.POST.get('password2', None)
-        bio = request.POST.get('bio', None) 
+        username = request.POST.get('username', '') # 입력되는 'username'의 정보는 username의 변수로 저장 (없다면 none 처리)
+        password = request.POST.get('password', '')
+        password2 = request.POST.get('password2', '')
+        bio = request.POST.get('bio', '') 
 
         if password != password2: # 입력되는 password와 재확인하는 password2 값이 다르다면,
-            return render(request, 'user/signup.html')
+            return render(request, 'user/signup.html', {'error':'비밀번호를 확인해주세요'})
         else: 
+            if username == '' or password == '':
+                return render(request, 'user/signup.html', {'error':'사용자의 이름과 비밀번호는 필수입니다'})
             exist_user = get_user_model().objects.filter(username=username) # 데이터베이스에 유저네임을 가진 사용자가 있는지 확인
             if exist_user: 
-                print('해당 아이디가 이미 존재합니다')
-                return render(request, 'user/signup.html')
+                return render(request, 'user/signup.html', {'error':'사용자가 존재합니다'})
             else: 
                 UserModel.objects.create_user(username=username, password=password, bio=bio)
-                print('신규 가입 성공')
             return redirect('/sign-in')
 
 
