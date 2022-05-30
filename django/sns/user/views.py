@@ -86,3 +86,22 @@ def logout(request):
 # '/'로 이동하는 이유는 tweet.views에 home 함수에서 자동으로 조건에 맞는 페이지로 이동하기 때문
 # home 함수는 tweet or sign-in 로 redirect해줌
 # 로그아웃은 로그인만 되어있는 상태에서 가능하기 때문에 임포트해주고 함수에 @ 작성해 적용시켜준다
+
+
+
+@login_required
+def user_view(request):
+    if request.method == 'GET':
+        user_list = UserModel.objects.all().exclude(username=request.user.username)
+        return render(request, 'user/user_list.html', {'user_list': user_list})
+        # username=request.user.(로그인한사용자의)username(username) > '나'를 exclude한 모든 객체 리스트
+        # 위의 user_list를 user/user_list.html에서 같이 보여줌
+@login_required
+def user_follow(request, id):
+    me = request.user
+    click_user = UserModel.objects.get(id=id) # 눌림당한 유저
+    if me in click_user.followee.all(): # 클릭유저 팔로우하는 모든 사람 중에 내가 있으면
+        click_user.followee.remove(request.user) # 나를 빼주기
+    else:   #클릭유저를 팔로우하는 사람 중에 내가 없다면
+        click_user.followee.add(request.user) #나를 더해줌
+    return redirect('/user')

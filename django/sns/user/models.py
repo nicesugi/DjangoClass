@@ -13,3 +13,4 @@ class UserModel(AbstractUser):
     follow = models.ManyToManyField(settings.AUTH_USER_MODEL,related_name='followee')
     # manytomany 관계의 데이터 : 임포트된 장고 세팅에서 AUTH_USER_MODE(=class UserModel)를 (참조)불러옵니다. 
     # follow 필드 안에 들어가는 정보들은 사용자 정보라는 뜻으로 
+    #followee 유저모델을 팔로우 하는 사람 들 ! 불러줌 /follow: 내가 팔로우하는 사람을 불러줌
