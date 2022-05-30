@@ -8,5 +8,5 @@ urlpatterns = [ # 작성한 views.py 를 urls.py에 연결 해 주기
     path('tweet/delete/<int:id>', views.delete_tweet, name='delete-tweet'), # <int:id> 계속 변할 수 있게 해줌. 숫자로 받을거라 int 설정하여 id라는 변수에 저장함 > id값은 tweet.views. views.py 폴더의 delete_tweet 함수 연결 
     path('tweet/<int:id>', views.detail_tweet, name='detail-tweet'),
     path('tweet/comment/<int:id>', views.write_comment, name='write-comment'),
-    # path('tweet/comment/delete/<int:id>', views.delete_comment, name='delete-comment'),
+    path('tweet/comment/delete/<int:id>', views.delete_comment, name='delete-comment'),
 ]

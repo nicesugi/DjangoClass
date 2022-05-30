@@ -66,3 +66,10 @@ def write_comment(request, id):
         TC.save()
 
         return redirect('/tweet/'+str(id))
+    
+@login_required
+def delete_comment(request, id):
+    comment = TweetComment.objects.get(id=id)
+    current_tweet = comment.tweet.id
+    comment.delete()
+    return redirect('/tweet/'+str(current_tweet))
