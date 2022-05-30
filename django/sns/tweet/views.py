@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import TweetComment
 from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
+from django.views.generic import ListView, TemplateView
 
 
 
@@ -30,18 +31,18 @@ def tweet(request):
     elif request.method == 'POST':  
         user = request.user  # 현재 로그인 한 사용자를 불러오기
         content = request.POST.get('my-content','')
+        tags = request.POST.get('tag', '').split(',')
         
         if content == '':
             all_tweet = TweetModel.objects.all().order_by('-created_at') # 글쓰는게 오류가 나더라도 원래 글을 보여줘야하기때문에 뒤에 에러와 같이 보여줌
             return render(request, 'tweet/home.html', {'error':'내용을 입력해주세요', 'tweet':all_tweet})
         else:
             my_tweet = TweetModel.objects.create(author=request.user, content=content)
+            for tag in tags:
+                tag = tag.strip()
+                if tag != '': # 태그를 작성하지 않았을 경우에 저장하지 않기 위해서
+                    my_tweet.tags.add(tag) # my_tweet 는 TweetModel >안에 있는> tags는 TaggableManager
             my_tweet.save()
-            # 밑의 코드도 가능한 코드
-            # my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
-            # my_tweet.author = user  # 모델에 사용자 저장
-            # my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
-            # my_tweet.save() 
             return redirect('/tweet')
         
 
@@ -82,3 +83,22 @@ def delete_comment(request, id):
     current_tweet = comment.tweet.id
     comment.delete()
     return redirect('/tweet/'+str(current_tweet))
+
+
+# TagCloudTV 클래스 : 태그들을 모아놓는 태그클라우드
+class TagCloudTV(TemplateView):
+    template_name = 'taggit/tag_cloud_view.html'
+
+
+# TaggedObjectLV 클래스 : 태그들을 모아서 화면에 전달하는 역할
+class TaggedObjectLV(ListView):
+    template_name = 'taggit/tag_with_post.html'
+    model = TweetModel
+
+    def get_queryset(self):
+        return TweetModel.objects.filter(tags__name=self.kwargs.get('tag'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tagname'] = self.kwargs['tag']
+        return context
