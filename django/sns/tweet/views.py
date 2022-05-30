@@ -1,4 +1,11 @@
+# user의 urls.py에 연결 할 tweet앱의 views.py 작성하기
+from xml.etree.ElementTree import Comment
+from django.contrib.auth.decorators import login_required
+from .models import TweetComment
+from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
 from django.shortcuts import render, redirect
+
+
 
 # Create your views here.
 def home(request):
@@ -8,12 +15,61 @@ def home(request):
     else:
         return redirect('sign-in')
 
+
+
 def tweet(request):
     if request.method =='GET':
         user = request.user.is_authenticated 
-        # 사용자의 로그인(인증)상태를 user라고 하고, 참이면 트윗 브라우저를 띄워주고 거짓이면 로그인페이지로 이동
-        if user:
-           return render(request, 'tweet/home.html')
-        else:
+        # 사용자의 로그인(인증)상태를 user라고 함
+        if user: # 사용자가 로그인(인증)상태라면
+            all_tweet = TweetModel.objects.all().order_by('-created_at')  # TweetModel에 저장한 모든 모델을 저장함 (생성된 시간을 '-'을 붙여 최신순,역순으로 정렬)
+            return render(request, 'tweet/home.html',{'tweet':all_tweet}) # 최신순 정렬인 all_tweet을 tweet/home.html 넘겨준다 > 딕셔너리 형태로 ! 키값은 트윗
+        else: # 사용자가 로그인(인증)상태가 아니라면
             print('로그인이 안된 상태')
             return redirect('/sign-in')
+    elif request.method == 'POST':  
+        user = request.user  # 현재 로그인 한 사용자를 불러오기
+        my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
+        my_tweet.author = user  # 모델에 사용자 저장
+        my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
+        my_tweet.save() 
+        return redirect('/tweet')
+    
+
+
+@login_required
+def delete_tweet(request, id):
+    my_tweet = TweetModel.objects.get(id=id)
+    my_tweet.delete()
+    return redirect('/tweet')   
+# 장고 delete_tweet 함수를 이용하여 '/tweet'로 이동시켜줌 
+# 삭제는 로그인만 되어있는 상태에서 가능 > login_required 임포트해주고 함수에 @ 작성해 적용시켜준다
+
+
+@login_required
+def detail_tweet(request, id):
+    my_tweet = TweetModel.objects.get(id=id)
+    tweet_comment = TweetComment.objects.filter(tweet_id=id).order_by('-created_at')
+    return render(request,'tweet/tweet_detail.html',{'tweet':my_tweet,'comment':tweet_comment})
+
+
+@login_required
+def write_comment(request, id):
+    if request.method == 'POST':
+        comment = request.POST.get("comment","")
+        current_tweet = TweetModel.objects.get(id=id)
+
+        TC = TweetComment()
+        TC.comment = comment
+        TC.author = request.user
+        TC.tweet = current_tweet
+        TC.save()
+
+        return redirect('/tweet/'+str(id))
+    
+@login_required
+def delete_comment(request, id):
+    comment = TweetComment.objects.get(id=id)
+    current_tweet = comment.tweet.id
+    comment.delete()
+    return redirect('/tweet/'+str(current_tweet))
