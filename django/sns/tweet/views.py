@@ -29,12 +29,21 @@ def tweet(request):
             return redirect('/sign-in')
     elif request.method == 'POST':  
         user = request.user  # 현재 로그인 한 사용자를 불러오기
-        my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
-        my_tweet.author = user  # 모델에 사용자 저장
-        my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
-        my_tweet.save() 
-        return redirect('/tweet')
-    
+        content = request.POST.get('my-content','')
+        
+        if content == '':
+            all_tweet = TweetModel.objects.all().order_by('-created_at') # 글쓰는게 오류가 나더라도 원래 글을 보여줘야하기때문에 뒤에 에러와 같이 보여줌
+            return render(request, 'tweet/home.html', {'error':'내용을 입력해주세요', 'tweet':all_tweet})
+        else:
+            my_tweet = TweetModel.objects.create(author=request.user, content=content)
+            my_tweet.save()
+            # 밑의 코드도 가능한 코드
+            # my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
+            # my_tweet.author = user  # 모델에 사용자 저장
+            # my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
+            # my_tweet.save() 
+            return redirect('/tweet')
+        
 
 
 @login_required
