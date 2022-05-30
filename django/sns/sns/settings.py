@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-_)(2wbz%y(rfjin-!lz7r144z09egf0)t5hoo20)*rep8re5k)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -58,7 +58,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'sns.urls'
 TEMPLATE_DIR = Path.joinpath(BASE_DIR, 'templates')
-# VSC 사용시 templates 경로 설정 필수!<55번과, 60번 코드>
+# VSC 사용시 templates 경로 설정 필수!<[TEMPLATE_DIR]>
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -132,5 +132,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # mySpartaSns/settings.py
-# 기본 인증과정 (AUTH_USER_MODEL)을 user앱에 작성한 UserModel로 사용한다는 뜻
+
 AUTH_USER_MODEL = 'user.UserModel'

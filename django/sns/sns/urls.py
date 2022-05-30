@@ -17,11 +17,13 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('test/', views.base_response,name='first_test'), # 'test/'라는 이름의 url을 views 파일의 base_response함수와 연결
-    path('first/', views.first_view,name='first_view'), # url과 함수를 연결 시켜줍니다.
-    path('', include('user.urls')), # user앱의 urls.py에 연결 
-    path('', include('tweet.urls')), # tweet앱의 urls.py에 연결 
+    path('test/', views.base_response,name='first_test'),
+    path('first/', views.first_view,name='first_view'), 
+    path('', include('user.urls')), 
+    path('', include('tweet.urls')), 
 ]
 

@@ -1,4 +1,3 @@
-<!-- templates/user/user_list.html -->
 {% extends 'base.html' %}
 {% block title %}
     사용자 리스트
@@ -41,7 +40,6 @@
                                     <a href="/user/follow/{{ ul.id }}" class="card-link">[팔로우 취소]</a>
                                 {% else %}
                                     <a href="/user/follow/{{ ul.id }}" class="card-link">[팔로우]</a>
-                                {% comment %} 팔로우 취소와 팔로우의 url이 같은데 이건 user.views에서 해당 내용을 작성해 같은 url을 사용할 수 있도록함 {% endcomment %}
                                 {% endif %}
                             </div>
                         </div>

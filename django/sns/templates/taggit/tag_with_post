@@ -1,13 +1,22 @@
-<div class="media-bod">
-    <h5 class="mt-0">{{ tweet.content }}</h5>
-    {% if tweet.tags.all %}
-    {% for tag in tweet.tags.all %}
-        <a style="text-decoration: none" href="{% url 'tagged_object_list' tag.name %}">
-            <span class="badge rounded-pill bg-success">
-                {{ tag.name }}
-            </span>
-        </a>
-    {% endfor %}
-    -<a style="text-decoration: none" href="{% url 'tag_cloud' %}">TagCloud</a>
-    {% endif %}
-</div>
+{% extends "base.html" %}
+
+{% block title %}태그 글 리스트{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h3 class="mt-2">Posts for tag - {{ tagname }}</h3>
+        <hr>
+        <div class="card">
+            <div class="card-body">
+                {% for tweet in object_list %}
+                    <h4>
+                        <a href="/tweet/{{ tweet.id }}">{{ tweet.content }}</a>
+                    </h4>
+                    {{ tweet.updated_at|timesince}}
+                    <p> {{ tweet.author }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
