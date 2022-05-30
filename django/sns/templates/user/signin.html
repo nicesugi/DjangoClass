@@ -18,12 +18,18 @@
                     <input type="password" class="form-control" id="password" name="password">
                 </div>
                 <hr>
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+                {% comment %} {% if error %} - {% endif %} 라는 뜻은, 
+                render함수에서 html을 출력 할 때, 'error' 데이터를 같이 넘겨 주었는가? 에 대한 조건 {% endcomment %}
                 <div style="float: right">
                     <button type="submit" class="btn btn-primary">로그인</button>
                     <a href="/sign-up" class="btn btn-secondary">회원가입 페이지로</a>
                 </div>
             </form>
-
         </div>
     </div>
 {% endblock %}

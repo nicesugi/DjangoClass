@@ -38,17 +38,15 @@ def sign_up_view(request):
 
 def sign_in_view(request):
     if request.method == 'POST':
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
+        username = request.POST.get('username', '')
+        password = request.POST.get('password', '')
 
         me = auth.authenticate(request, username=username, password=password)  # authenticate 함수 이용하여 암호화된 비밀번호와 입력한 비밀번호가 일치하고 유저네임도 맞는지 확인가능
         if me is not None:  # 사용자가 있는지 구분만 함 / 왜? 위에서 이미 사용자 정보를 체크해주고 로그인 정보를 들고오기 때문
             auth.login(request, me) # auth.login : 장고 제공되는 로그인 함수 / 로그인 함수에 사용자(me) 정보를 넣어줌
-            print('로그인 성공')
             return redirect('/') # '/' : tweet.urls > views.home > home 함수 > 성공시 트윗페이지
         else: 
-            print('로그인 실패')
-            return redirect('/sign-in')
+            return render(request, 'user/signin.html', {'error':'username 혹은 password를 확인해주세요'})
     elif request.method == 'GET':
         return render(request, 'user/signin.html')
 
