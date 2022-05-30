@@ -48,24 +48,6 @@ def sign_in_view(request):
         else: 
             return render(request, 'user/signin.html', {'error':'username 혹은 password를 확인해주세요'})
     elif request.method == 'GET':
-        return render(request, 'user/signin.html')
-
-
-
-def sign_in_view(request):
-    if request.method == 'POST':
-        username = request.POST.get('username', None)
-        password = request.POST.get('password', None)
-
-        me = auth.authenticate(request, username=username, password=password)  
-        if me is not None:  
-            auth.login(request, me)
-            print('로그인 성공')
-            return redirect('/') 
-        else: 
-            print('로그인 실패')
-            return redirect('/sign-in')
-    elif request.method == 'GET':
         user = request.user.is_authenticated
         # 사용자가 로그인(인증)상태로 sign-up페이지에 접속한다면 트윗페이지로 돌려주고, 인증상태가 아니라면 sign-up페이지 이동
         if user:
@@ -73,6 +55,8 @@ def sign_in_view(request):
             return redirect('/') # tweet.views에 home 함수 기능 때문에 이곳에서는 '/'로 redirect시켜줌
         else:
             return render(request, 'user/signin.html')
+
+
 
 
 @login_required
