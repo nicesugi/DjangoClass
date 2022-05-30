@@ -1,17 +1,16 @@
-# user의 urls.py에 연결 할 tweet앱의 views.py 작성하기
 from xml.etree.ElementTree import Comment
 from django.contrib.auth.decorators import login_required
 from .models import TweetComment
-from .models import TweetModel # 글쓰기 모델 -> 가장 윗부분에 적어주세요!
+from .models import TweetModel
 from django.shortcuts import render, redirect
+from django.views.generic import ListView, TemplateView
 
 
 
-# Create your views here.
 def home(request):
-    user = request.user.is_authenticated # 장고함수 > 사용자가 인증을 받았는지 (로그인이 되어있는지)
+    user = request.user.is_authenticated 
     if user:
-        return redirect('/tweet') # user.views.sign_in_view 함수 성공 > tweet.urls.name=home > tweet.views 지금 이 코드와 최종적 연결됨
+        return redirect('/tweet')
     else:
         return redirect('sign-in')
 
@@ -20,21 +19,29 @@ def home(request):
 def tweet(request):
     if request.method =='GET':
         user = request.user.is_authenticated 
-        # 사용자의 로그인(인증)상태를 user라고 함
-        if user: # 사용자가 로그인(인증)상태라면
-            all_tweet = TweetModel.objects.all().order_by('-created_at')  # TweetModel에 저장한 모든 모델을 저장함 (생성된 시간을 '-'을 붙여 최신순,역순으로 정렬)
-            return render(request, 'tweet/home.html',{'tweet':all_tweet}) # 최신순 정렬인 all_tweet을 tweet/home.html 넘겨준다 > 딕셔너리 형태로 ! 키값은 트윗
-        else: # 사용자가 로그인(인증)상태가 아니라면
+        if user: 
+            all_tweet = TweetModel.objects.all().order_by('-created_at')
+            return render(request, 'tweet/home.html',{'tweet':all_tweet})
+        else: 
             print('로그인이 안된 상태')
             return redirect('/sign-in')
+        
     elif request.method == 'POST':  
-        user = request.user  # 현재 로그인 한 사용자를 불러오기
-        my_tweet = TweetModel()  # my_tweet이름으로 TweetModel 가져오기
-        my_tweet.author = user  # 모델에 사용자 저장
-        my_tweet.content = request.POST.get('my-content', '')  # 모델에 글 저장
-        my_tweet.save() 
-        return redirect('/tweet')
-    
+        user = request.user  
+        content = request.POST.get('my-content','')
+        tags = request.POST.get('tag', '').split(',')
+        if content == '':
+            all_tweet = TweetModel.objects.all().order_by('-created_at') 
+            return render(request, 'tweet/home.html', {'error':'내용을 입력해주세요', 'tweet':all_tweet})
+        else:
+            my_tweet = TweetModel.objects.create(author=request.user, content=content)
+            for tag in tags:
+                tag = tag.strip()
+                if tag != '':
+                    my_tweet.tags.add(tag)
+            my_tweet.save()
+            return redirect('/tweet')
+        
 
 
 @login_required
@@ -42,8 +49,7 @@ def delete_tweet(request, id):
     my_tweet = TweetModel.objects.get(id=id)
     my_tweet.delete()
     return redirect('/tweet')   
-# 장고 delete_tweet 함수를 이용하여 '/tweet'로 이동시켜줌 
-# 삭제는 로그인만 되어있는 상태에서 가능 > login_required 임포트해주고 함수에 @ 작성해 적용시켜준다
+
 
 
 @login_required
@@ -73,3 +79,22 @@ def delete_comment(request, id):
     current_tweet = comment.tweet.id
     comment.delete()
     return redirect('/tweet/'+str(current_tweet))
+
+
+
+class TagCloudTV(TemplateView):
+    template_name = 'taggit/tag_cloud_view.html'
+
+
+
+class TaggedObjectLV(ListView):
+    template_name = 'taggit/tag_with_post.html'
+    model = TweetModel
+
+    def get_queryset(self):
+        return TweetModel.objects.filter(tags__name=self.kwargs.get('tag'))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tagname'] = self.kwargs['tag']
+        return context
