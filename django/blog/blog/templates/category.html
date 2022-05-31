@@ -1,0 +1,13 @@
+{% extends "category.html" %}
+
+{% block content %}
+<body>
+    <form action="/" method="get">
+        <div class="mt-3 row">
+        <textarea> action="/movie/" name='movie' id="movie"</textarea>
+        <textarea> action="/drama/" name='drama' id="drama"</textarea>
+        <textarea> action="/entertain/" name='entertain' id="entertain"</textarea>
+        <button action="/new/" name='article' id="article" type="submit" class="btn btn-primary" style="float:right;">글쓰기</button>
+    </form>
+</body>
+{% endblock %}
